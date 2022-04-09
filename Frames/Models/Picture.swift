@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Picture: Codable {
+struct Picture: Codable, Hashable {
     let id: String
     let urls: [UrlsKind.RawValue : String]
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F4775F32800797900818FFF /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4775F22800797900818FFF /* ErrorMessage.swift */; };
 		1F625CFD27FC9D06001081B8 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F625CFC27FC9D06001081B8 /* PictureCell.swift */; };
 		1F625CFF27FC9E6A001081B8 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F625CFE27FC9E69001081B8 /* Picture.swift */; };
 		1F625D0127FC9F95001081B8 /* PictureInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F625D0027FC9F95001081B8 /* PictureInfo.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F4775F22800797900818FFF /* ErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
 		1F625CFC27FC9D06001081B8 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 		1F625CFE27FC9E69001081B8 /* Picture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
 		1F625D0027FC9F95001081B8 /* PictureInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureInfo.swift; sourceTree = "<group>"; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F4775F12800795500818FFF /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				1F4775F22800797900818FFF /* ErrorMessage.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		1F625CFA27FC853B001081B8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +100,7 @@
 		1FB6AC2427FB4ACA008F9B31 /* Frames */ = {
 			isa = PBXGroup;
 			children = (
+				1F4775F12800795500818FFF /* Utilities */,
 				1F625D0227FCA56C001081B8 /* NetworkManager */,
 				1F625CFB27FC9CD5001081B8 /* Cells */,
 				1F625CFA27FC853B001081B8 /* Models */,
@@ -190,6 +201,7 @@
 			files = (
 				1FE0D11627FDDC7A007A443D /* NetworkManager.swift in Sources */,
 				1F625CFF27FC9E6A001081B8 /* Picture.swift in Sources */,
+				1F4775F32800797900818FFF /* ErrorMessage.swift in Sources */,
 				1FB6AC2A27FB4ACA008F9B31 /* PicturesVC.swift in Sources */,
 				1FB6AC2627FB4ACA008F9B31 /* AppDelegate.swift in Sources */,
 				1F625CFD27FC9D06001081B8 /* PictureCell.swift in Sources */,

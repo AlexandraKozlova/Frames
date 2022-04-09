@@ -14,6 +14,7 @@ class PictureCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super .init(frame: frame)
+        configure()
     }
     
     required init?(coder: NSCoder) {
@@ -25,6 +26,13 @@ class PictureCell: UICollectionViewCell {
         image.image = UIImage(named: "Icon")
         image.translatesAutoresizingMaskIntoConstraints = false
         image.clipsToBounds = true
+        
+        NSLayoutConstraint.activate([
+            image.topAnchor.constraint(equalTo: self.topAnchor),
+            image.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            image.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            image.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
     }
     
 }
