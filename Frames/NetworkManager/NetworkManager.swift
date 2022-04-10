@@ -14,25 +14,25 @@ class NetworkManager {
     
     let urlOFRandomPhotos = "https://api.unsplash.com/photos/random/?count=30&client_id=\(accessKey)"
     
-    func getPictures(comlited: @escaping ([Picture]?, ErrorMessage?) -> Void) {
+    func getPictures(completion: @escaping (Result<[Picture], ErrorMessage>) -> Void) {
         
         guard let url = URL(string: urlOFRandomPhotos) else {
-            comlited(nil, ErrorMessage.invalidResponse)
+            completion(.failure(.invalidResponse))
             return
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let _ = error {
-                comlited(nil, ErrorMessage.unableToComplite)
+                completion(.failure(.unableToComplite))
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                comlited(nil, ErrorMessage.invalidResponse)
+                completion(.failure(.invalidResponse))
                 return
             }
             
             guard let data = data else {
-                comlited(nil, ErrorMessage.invalidData)
+                completion(.failure(.invalidData))
                 return
             }
             
@@ -40,14 +40,11 @@ class NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let pictures = try decoder.decode([Picture].self, from: data)
-                comlited(pictures, nil)
+                completion(.success(pictures))
             } catch {
-                comlited(nil, ErrorMessage.invalidData)
-            }
-        }
+                completion(.failure(.invalidData))
+                }
+           }
         task.resume()
-    }
-}
-
-
-
+        }
+ }

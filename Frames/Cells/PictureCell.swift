@@ -6,15 +6,37 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PictureCell: UICollectionViewCell {
     
     static let reuseID = "PictureCell"
-    let image = UIImageView()
+    private let image: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .systemGray
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    var unsplashImages: Picture! {
+        didSet {
+            let imageUrl = unsplashImages.urls["regular"]
+            guard let imageUrl = imageUrl,
+                  let url = URL(string: imageUrl)
+            else { return }
+            image.sd_setImage(with: url)
+        }
+    }
     
     override init(frame: CGRect) {
         super .init(frame: frame)
         configure()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        image.image = nil
     }
     
     required init?(coder: NSCoder) {
@@ -23,9 +45,7 @@ class PictureCell: UICollectionViewCell {
     
     private func configure() {
         addSubview(image)
-        image.image = UIImage(named: "Icon")
-        image.translatesAutoresizingMaskIntoConstraints = false
-        image.clipsToBounds = true
+        
         
         NSLayoutConstraint.activate([
             image.topAnchor.constraint(equalTo: self.topAnchor),

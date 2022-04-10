@@ -9,6 +9,8 @@ import Foundation
 
 struct Picture: Codable, Hashable {
     let id: String
+    let width: Int
+    let height: Int
     let urls: [UrlsKind.RawValue : String]
     
     enum UrlsKind: String {

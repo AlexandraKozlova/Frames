@@ -14,7 +14,9 @@ class PicturesVC: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Picture>!
 
-    var pictures: [Picture] = []
+    var pictures = [Picture]()
+    private let itemsPerRow: CGFloat = 2
+    private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,17 +25,19 @@ class PicturesVC: UIViewController {
         getPictures()
         configureCollectionView()
         configureDataSource()
-        
+        collectionView.delegate = self
 }
     
     func getPictures() {
-        NetworkManager.shared.getPictures { pictures, errorMessage in
-            guard let pictures = pictures else { print(errorMessage ?? "error")
-                return
+        NetworkManager.shared.getPictures { result in
+            switch result {
+            case .success(let pictures):
+                self.pictures = pictures
+                self.updateData()
+                print(self.pictures)
+            case .failure(let error):
+                print(error)
             }
-            self.pictures = pictures
-            self.updateData()
-            print(self.pictures)
         }
     }
     
@@ -46,29 +50,20 @@ class PicturesVC: UIViewController {
     }
     
     private func configureCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createTwoColumnFlowLayout())
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createTwoColumnFlowLayout(in: view))
         view.addSubview(collectionView)
         collectionView.backgroundColor = .white
         collectionView.register(PictureCell.self, forCellWithReuseIdentifier: PictureCell.reuseID)
-    }
-
-    func createTwoColumnFlowLayout() -> UICollectionViewFlowLayout {
-        let width = view.bounds.width
-        let padding: CGFloat = 12
-        let minimumItemSpacing: CGFloat = 10
-        let availableWidth = width - (padding * 2) - (minimumItemSpacing * 2)
-        let itemWidth = availableWidth / 2
-
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-        flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth + 40)
-
-        return flowLayout
+        collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        collectionView.contentInsetAdjustmentBehavior = .always
+        
     }
     
     func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Picture>(collectionView: collectionView, cellProvider: { collectionView, indexPath, follower in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PictureCell.reuseID, for: indexPath) as! PictureCell
+            let unsplashImage = self.pictures[indexPath.row]
+            cell.unsplashImages = unsplashImage
             return cell
         })
     }
@@ -81,7 +76,28 @@ class PicturesVC: UIViewController {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+}
 
+
+extension PicturesVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let picture = pictures[indexPath.item]
+        let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
+        let availableWidth = view.frame.width / itemsPerRow
+        let widthPerItem = availableWidth / itemsPerRow
+        let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
+        return CGSize(width: widthPerItem, height: height)
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInserts
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return sectionInserts.left
+    }
 }
 
 extension PicturesVC: UISearchResultsUpdating {
