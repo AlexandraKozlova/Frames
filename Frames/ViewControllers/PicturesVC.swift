@@ -16,7 +16,7 @@ class PicturesVC: UIViewController {
 
     var pictures = [Picture]()
     private let itemsPerRow: CGFloat = 2
-    private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+    private let sectionInserts = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +33,8 @@ class PicturesVC: UIViewController {
             switch result {
             case .success(let pictures):
                 self.pictures = pictures
-                self.updateData()
                 print(self.pictures)
+                self.updateData()
             case .failure(let error):
                 print(error)
             }
@@ -84,7 +84,7 @@ extension PicturesVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let picture = pictures[indexPath.item]
         let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
-        let availableWidth = view.frame.width / itemsPerRow
+        let availableWidth = view.frame.width - paddingSpace
         let widthPerItem = availableWidth / itemsPerRow
         let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
         return CGSize(width: widthPerItem, height: height)
@@ -100,10 +100,36 @@ extension PicturesVC: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension PicturesVC: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let picture = pictures[indexPath.item]
+        let destinationVC = PictureInfoVC()
+        
+        let imageUrl = picture.urls["regular"]
+        guard let imageUrl = imageUrl, let url = URL(string: imageUrl)
+        else { return }
+        destinationVC.picture.sd_setImage(with: url)
+        
+        guard let location = picture.user.location else {
+            destinationVC.locationLabel.text = "No location"
+            return
+        }
+        destinationVC.locationLabel.text = location
+        
+        destinationVC.username.text = picture.user.name
+        let navigationController = UINavigationController(rootViewController: destinationVC)
+        present(navigationController, animated: true)
+    }
+
+    }
+
+
 extension PicturesVC: UISearchResultsUpdating {
    
     func updateSearchResults(for searchController: UISearchController) {
         print("Search")
     }
 }
+
 

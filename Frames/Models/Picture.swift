@@ -8,16 +8,16 @@
 import Foundation
 
 struct Picture: Codable, Hashable {
-    let id: String
+    let views: Int
+    let downloads: Int
     let width: Int
     let height: Int
-    let urls: [UrlsKind.RawValue : String]
+    let user: User
+    let urls: [String : String]
     
-    enum UrlsKind: String {
-        case raw
-        case full
-        case regular
-        case small
-        case thumb
+    struct User: Codable, Hashable {
+        let name: String
+        let location: String?
     }
+    
 }
