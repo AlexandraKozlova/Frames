@@ -1,14 +1,14 @@
 //
-//  TitleLabel.swift
+//  CountLabel.swift
 //  Frames
 //
-//  Created by Aleksandra on 14.04.2022.
+//  Created by Aleksandra on 15.04.2022.
 //
 
 import UIKit
 
-class TitleLabel: UILabel {
-    
+class CountLabel: UILabel {
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -18,18 +18,13 @@ class TitleLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(fontName: String, fontSize: CGFloat) {
-        super.init(frame: .zero)
-        font = UIFont(name: fontName, size: fontSize)
-        configure()
-    }
-    
     private func configure() {
         translatesAutoresizingMaskIntoConstraints = false
         textColor = .label
         adjustsFontSizeToFitWidth = true
         minimumScaleFactor = 0.9
+        font = UIFont(name: "Avenir-Heavy", size: 18)
         lineBreakMode = .byTruncatingHead
-        textAlignment = .left
+        textAlignment = .center
     }
 }

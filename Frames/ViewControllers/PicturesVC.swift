@@ -118,6 +118,8 @@ extension PicturesVC: UICollectionViewDelegate {
         destinationVC.locationLabel.text = location
         
         destinationVC.username.text = picture.user.name
+        destinationVC.downloadsCount.text = String(picture.downloads)
+        destinationVC.viewsCount.text = String(picture.views)
         let navigationController = UINavigationController(rootViewController: destinationVC)
         present(navigationController, animated: true)
     }
