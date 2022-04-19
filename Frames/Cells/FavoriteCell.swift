@@ -13,8 +13,7 @@ class FavoriteCell: UITableViewCell {
     let pictureView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .systemGray
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     let usernameLabel = TitleLabel(fontName: "Avenir", fontSize: 25)
@@ -27,10 +26,6 @@ class FavoriteCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func set(picture: Picture) {
-        usernameLabel.text = picture.user.name
-}
     
     private func configurePictureView() {
         
@@ -47,8 +42,8 @@ class FavoriteCell: UITableViewCell {
         NSLayoutConstraint.activate([
             pictureView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             pictureView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-            pictureView.heightAnchor.constraint(equalToConstant: 60),
-            pictureView.widthAnchor.constraint(equalToConstant: 60),
+            pictureView.heightAnchor.constraint(equalToConstant: 90),
+            pictureView.widthAnchor.constraint(equalToConstant: 90),
             
             usernameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             usernameLabel.leadingAnchor.constraint(equalTo: pictureView.trailingAnchor, constant: 24),

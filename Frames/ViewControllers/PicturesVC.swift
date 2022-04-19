@@ -33,7 +33,6 @@ class PicturesVC: UIViewController {
             switch result {
             case .success(let pictures):
                 self.pictures = pictures
-                print(self.pictures)
                 self.updateData()
             case .failure(let error):
                 print(error)
@@ -105,23 +104,8 @@ extension PicturesVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let picture = pictures[indexPath.item]
         let destinationVC = PictureInfoVC()
-        
-        let imageUrl = picture.urls["regular"]
-        guard let imageUrl = imageUrl, let url = URL(string: imageUrl)
-        else { return }
-        destinationVC.picture.sd_setImage(with: url)
-        
-        guard let location = picture.user.location else {
-            destinationVC.locationLabel.text = "No location"
-            return
-        }
-        destinationVC.locationLabel.text = location
-        
-        destinationVC.username.text = picture.user.name
-        destinationVC.downloadsCount.text = String(picture.downloads)
-        destinationVC.viewsCount.text = String(picture.views)
-        let navigationController = UINavigationController(rootViewController: destinationVC)
-        present(navigationController, animated: true)
+        destinationVC.currentPicture = picture
+        navigationController?.pushViewController(destinationVC, animated: true)
     }
 
     }

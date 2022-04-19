@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import RealmSwift
 
 class PictureInfoVC: UIViewController {
+    
+    var currentPicture: Picture!
     
     let picture: UIImageView = {
         let imageView = UIImageView()
@@ -42,22 +45,35 @@ class PictureInfoVC: UIViewController {
         configureDownloadsCount()
         configureViewsCount()
         configureAddButton()
+        updateUIElement()
     }
     
     private func configureViewController() {
         view.backgroundColor = .white
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissVC))
-        doneButton.tintColor = UIColor.systemPink
-        navigationItem.rightBarButtonItem = doneButton
+        navigationController?.navigationBar.tintColor = UIColor.systemPink
     }
     
-    @objc func dismissVC() { dismiss(animated: true)}
+    private func updateUIElement() {
+        let imageUrl = currentPicture.urls["regular"]
+        guard let imageUrl = imageUrl, let url = URL(string: imageUrl)
+        else { return }
+        picture.sd_setImage(with: url)
+        
+        guard let location = currentPicture.user.location else {
+            locationLabel.text = "No location"
+            return
+        }
+        locationLabel.text = location
+        username.text = currentPicture.user.name
+        downloadsCount.text = String(currentPicture.downloads)
+        viewsCount.text = String(currentPicture.views)
+    }
     
     private func configurePicture() {
         view.addSubview(picture)
         
         NSLayoutConstraint.activate([
-            picture.topAnchor.constraint(equalTo: view.topAnchor, constant: 45),
+            picture.topAnchor.constraint(equalTo: view.topAnchor, constant: 85),
             picture.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             picture.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             picture.heightAnchor.constraint(equalToConstant: 400)
@@ -66,7 +82,7 @@ class PictureInfoVC: UIViewController {
     
     private func configureLabel() {
         view.addSubview(username)
-
+        
         NSLayoutConstraint.activate([
             username.topAnchor.constraint(equalTo: picture.bottomAnchor, constant: 10),
             username.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
@@ -107,7 +123,7 @@ class PictureInfoVC: UIViewController {
         infoView.layer.cornerRadius = 10
         
         NSLayoutConstraint.activate([
-            infoView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 15),
+            infoView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 20),
             infoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             infoView.heightAnchor.constraint(equalToConstant: 150)
@@ -131,7 +147,7 @@ class PictureInfoVC: UIViewController {
     private func configureDownloadsLabel() {
         infoView.addSubview(downloadsLabel)
         downloadsLabel.text = "Downloads"
-       
+        
         NSLayoutConstraint.activate([
             downloadsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
             downloadsLabel.leadingAnchor.constraint(equalTo: downloadsImage.trailingAnchor, constant: 6),
@@ -157,7 +173,7 @@ class PictureInfoVC: UIViewController {
     private func configureViewsLabel() {
         infoView.addSubview(viewsLabel)
         viewsLabel.text = "Views"
-       
+        
         NSLayoutConstraint.activate([
             viewsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
             viewsLabel.leadingAnchor.constraint(equalTo: viewsImage.trailingAnchor, constant: 6),
@@ -201,8 +217,10 @@ class PictureInfoVC: UIViewController {
     }
     
     @objc func buttonTapped() {
-       print("Tap button")
+        let favorite = Favorite(user: currentPicture.user.name, urls: currentPicture.urls["regular"]!)
+        StorageManager.saveObject(favorite)
+        print("Tap button")
     }
-
+    
     
 }
