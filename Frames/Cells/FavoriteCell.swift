@@ -16,7 +16,7 @@ class FavoriteCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
-    let usernameLabel = TitleLabel(fontName: "Avenir", fontSize: 25)
+    let usernameLabel = TitleLabel(fontName: "Avenir", fontSize: 25, textAlignment: .left)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -25,10 +25,6 @@ class FavoriteCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func configurePictureView() {
-        
     }
     
     private func configure() {

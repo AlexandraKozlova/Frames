@@ -8,8 +8,8 @@
 import Foundation
 
 struct Picture: Codable, Hashable {
-    let views: Int
-    let downloads: Int
+    
+    let likes: Int
     let width: Int
     let height: Int
     let user: User
@@ -19,5 +19,4 @@ struct Picture: Codable, Hashable {
         let name: String
         let location: String?
     }
-    
 }

@@ -46,7 +46,6 @@ class PictureCell: UICollectionViewCell {
     private func configure() {
         addSubview(image)
         
-        
         NSLayoutConstraint.activate([
             image.topAnchor.constraint(equalTo: self.topAnchor),
             image.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -54,5 +53,4 @@ class PictureCell: UICollectionViewCell {
             image.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
-    
 }

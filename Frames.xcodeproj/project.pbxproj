@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F192B5D2805E77300C2FAF0 /* PictureInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F192B5C2805E77300C2FAF0 /* PictureInfoVC.swift */; };
+		1F2693B82810596B00E43A8D /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2693B72810596B00E43A8D /* SearchResults.swift */; };
 		1F4775F32800797900818FFF /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4775F22800797900818FFF /* ErrorMessage.swift */; };
 		1F5FC620280C7B5C00964B1F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1F5FC61F280C7B5C00964B1F /* RealmSwift */; };
 		1F5FC622280C7C0A00964B1F /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5FC621280C7C0A00964B1F /* Favorite.swift */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		1F192B5C2805E77300C2FAF0 /* PictureInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureInfoVC.swift; sourceTree = "<group>"; };
+		1F2693B72810596B00E43A8D /* SearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResults.swift; sourceTree = "<group>"; };
 		1F4775F22800797900818FFF /* ErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
 		1F5FC621280C7C0A00964B1F /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
 		1F5FC623280C81E500964B1F /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				1F625CFE27FC9E69001081B8 /* Picture.swift */,
+				1F2693B72810596B00E43A8D /* SearchResults.swift */,
 				1F5FC621280C7C0A00964B1F /* Favorite.swift */,
 			);
 			path = Models;
@@ -259,6 +262,7 @@
 				1F625D0427FCA593001081B8 /* AccessKey.swift in Sources */,
 				1F6A9EBE2804966D00132CB4 /* FavoriteCell.swift in Sources */,
 				1F6D6F3928086C630091C720 /* TitleLabel.swift in Sources */,
+				1F2693B82810596B00E43A8D /* SearchResults.swift in Sources */,
 				1FB6AC2827FB4ACA008F9B31 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,9 +18,10 @@ class TitleLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(fontName: String, fontSize: CGFloat) {
+    init(fontName: String, fontSize: CGFloat, textAlignment: NSTextAlignment) {
         super.init(frame: .zero)
         font = UIFont(name: fontName, size: fontSize)
+        self.textAlignment = textAlignment
         configure()
     }
     
@@ -30,6 +31,5 @@ class TitleLabel: UILabel {
         adjustsFontSizeToFitWidth = true
         minimumScaleFactor = 0.9
         lineBreakMode = .byTruncatingHead
-        textAlignment = .left
     }
 }

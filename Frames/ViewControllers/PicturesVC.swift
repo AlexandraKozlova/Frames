@@ -17,6 +17,7 @@ class PicturesVC: UIViewController {
     var pictures = [Picture]()
     private let itemsPerRow: CGFloat = 2
     private let sectionInserts = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    var page = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +30,12 @@ class PicturesVC: UIViewController {
 }
     
     func getPictures() {
-        NetworkManager.shared.getPictures { result in
+        NetworkManager.shared.getPictures { [weak self] result  in
+            guard let self = self else { return }
             switch result {
             case .success(let pictures):
                 self.pictures = pictures
-                self.updateData()
+                self.updateData(with: pictures)
             case .failure(let error):
                 print(error)
             }
@@ -42,10 +44,9 @@ class PicturesVC: UIViewController {
     
     func configureSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "What are you lookin for?"
         navigationItem.searchController = searchController
-
+        searchController.searchBar.delegate = self
     }
     
     private func configureCollectionView() {
@@ -55,7 +56,6 @@ class PicturesVC: UIViewController {
         collectionView.register(PictureCell.self, forCellWithReuseIdentifier: PictureCell.reuseID)
         collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         collectionView.contentInsetAdjustmentBehavior = .always
-        
     }
     
     func configureDataSource() {
@@ -67,7 +67,7 @@ class PicturesVC: UIViewController {
         })
     }
     
-    func updateData() {
+    func updateData(with pictures: [Picture]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Picture>()
         snapshot.appendSections([.main])
         snapshot.appendItems(pictures)
@@ -107,15 +107,30 @@ extension PicturesVC: UICollectionViewDelegate {
         destinationVC.currentPicture = picture
         navigationController?.pushViewController(destinationVC, animated: true)
     }
+}
 
-    }
-
-
-extension PicturesVC: UISearchResultsUpdating {
-   
-    func updateSearchResults(for searchController: UISearchController) {
-        print("Search")
+extension PicturesVC: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let text = searchBar.text {
+            NetworkManager.shared.getSearchResult(query: text) { [weak self] result in
+                    DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let images):
+                        self.pictures = images
+                        self.updateData(with: images)
+                        self.collectionView.reloadData()
+                        print(images)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
     }
 }
+
+
 
 

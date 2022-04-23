@@ -18,16 +18,13 @@ class PictureInfoVC: UIViewController {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
-    let username = TitleLabel(fontName: "Avenir-Heavy", fontSize: 25)
+    let username = TitleLabel(fontName: "Avenir-Heavy", fontSize: 25, textAlignment: .left)
     let locationImage = UIImageView()
-    let locationLabel = TitleLabel(fontName: "Avenir-Light", fontSize: 20)
+    let locationLabel = TitleLabel(fontName: "Avenir-Light", fontSize: 20, textAlignment: .left)
     let infoView = UIView()
-    let downloadsImage = UIImageView()
-    let downloadsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20)
-    let viewsImage = UIImageView()
-    let viewsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20)
-    let downloadsCount = CountLabel()
-    let viewsCount = CountLabel()
+    let likeImage = UIImageView()
+    let likeLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
+    let likeCount = CountLabel()
     let addButton = AddButton()
     
     override func viewDidLoad() {
@@ -38,12 +35,9 @@ class PictureInfoVC: UIViewController {
         configureLocationImage()
         configureLocationLabel()
         configureInfoView()
-        configureDownloadsImage()
-        configureDownloadsLabel()
-        configureViewsImage()
-        configureViewsLabel()
-        configureDownloadsCount()
-        configureViewsCount()
+        configureLikeImage()
+        configureLikeLabel()
+        configureLikeCount()
         configureAddButton()
         updateUIElement()
     }
@@ -65,8 +59,7 @@ class PictureInfoVC: UIViewController {
         }
         locationLabel.text = location
         username.text = currentPicture.user.name
-        downloadsCount.text = String(currentPicture.downloads)
-        viewsCount.text = String(currentPicture.views)
+        likeCount.text = String(currentPicture.likes)
     }
     
     private func configurePicture() {
@@ -130,77 +123,39 @@ class PictureInfoVC: UIViewController {
         ])
     }
     
-    private func configureDownloadsImage() {
-        infoView.addSubview(downloadsImage)
-        downloadsImage.translatesAutoresizingMaskIntoConstraints = false
-        downloadsImage.image = UIImage(systemName: "square.and.arrow.down")
-        downloadsImage.tintColor = UIColor.black
+    private func configureLikeImage() {
+        infoView.addSubview(likeImage)
+        likeImage.translatesAutoresizingMaskIntoConstraints = false
+        likeImage.image = UIImage(systemName: "heart")
+        likeImage.tintColor = UIColor.systemPink
         
         NSLayoutConstraint.activate([
-            downloadsImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            downloadsImage.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 30),
-            downloadsImage.heightAnchor.constraint(equalToConstant: 20),
-            downloadsImage.widthAnchor.constraint(equalToConstant: 20)
+            likeImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            likeImage.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 110),
+            likeImage.heightAnchor.constraint(equalToConstant: 35),
+            likeImage.widthAnchor.constraint(equalToConstant: 40)
         ])
     }
     
-    private func configureDownloadsLabel() {
-        infoView.addSubview(downloadsLabel)
-        downloadsLabel.text = "Downloads"
+    private func configureLikeLabel() {
+        infoView.addSubview(likeLabel)
+        likeLabel.text = "Likes"
         
         NSLayoutConstraint.activate([
-            downloadsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            downloadsLabel.leadingAnchor.constraint(equalTo: downloadsImage.trailingAnchor, constant: 6),
-            downloadsLabel.heightAnchor.constraint(equalToConstant: 20),
-            downloadsLabel.widthAnchor.constraint(equalToConstant: 120)
+            likeLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            likeLabel.centerXAnchor.constraint(equalTo: infoView.centerXAnchor),
+            likeLabel.heightAnchor.constraint(equalToConstant: 35),
+            likeLabel.widthAnchor.constraint(equalToConstant: 70)
         ])
     }
     
-    private func configureViewsImage() {
-        infoView.addSubview(viewsImage)
-        viewsImage.translatesAutoresizingMaskIntoConstraints = false
-        viewsImage.image = UIImage(systemName: "eye")
-        viewsImage.tintColor = UIColor.black
+    private func configureLikeCount() {
+        infoView.addSubview(likeCount)
         
         NSLayoutConstraint.activate([
-            viewsImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            viewsImage.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 220),
-            viewsImage.heightAnchor.constraint(equalToConstant: 20),
-            viewsImage.widthAnchor.constraint(equalToConstant: 23)
-        ])
-    }
-    
-    private func configureViewsLabel() {
-        infoView.addSubview(viewsLabel)
-        viewsLabel.text = "Views"
-        
-        NSLayoutConstraint.activate([
-            viewsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            viewsLabel.leadingAnchor.constraint(equalTo: viewsImage.trailingAnchor, constant: 6),
-            viewsLabel.heightAnchor.constraint(equalToConstant: 20),
-            viewsLabel.widthAnchor.constraint(equalToConstant: 75)
-        ])
-    }
-    
-    private func configureDownloadsCount() {
-        infoView.addSubview(downloadsCount)
-        
-        NSLayoutConstraint.activate([
-            downloadsCount.topAnchor.constraint(equalTo: downloadsLabel.bottomAnchor, constant: 6),
-            downloadsCount.leadingAnchor.constraint(equalTo: downloadsImage.leadingAnchor),
-            downloadsCount.trailingAnchor.constraint(equalTo: downloadsLabel.trailingAnchor),
-            downloadsCount.heightAnchor.constraint(equalToConstant: 20)
-        ])
-    }
-    
-    private func configureViewsCount() {
-        infoView.addSubview(viewsCount)
-        
-        NSLayoutConstraint.activate([
-            viewsCount.topAnchor.constraint(equalTo: viewsLabel.bottomAnchor, constant: 10),
-            viewsCount.leadingAnchor.constraint(equalTo: viewsImage.leadingAnchor),
-            viewsCount.trailingAnchor.constraint(equalTo: viewsLabel.trailingAnchor),
-            viewsCount.heightAnchor.constraint(equalToConstant: 20)
+            likeCount.topAnchor.constraint(equalTo: likeLabel.bottomAnchor, constant: 10),
+            likeCount.centerXAnchor.constraint(equalTo: infoView.centerXAnchor),
+            likeCount.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -216,11 +171,20 @@ class PictureInfoVC: UIViewController {
         ])
     }
     
+    
+    
     @objc func buttonTapped() {
+        var favorites = [Favorite]()
         let favorite = Favorite(user: currentPicture.user.name, urls: currentPicture.urls["regular"]!)
-        StorageManager.saveObject(favorite)
-        print("Tap button")
+        guard !favorites.contains(favorite)
+        else {
+            print("contains")
+            return
+        }
+        favorites.append(favorite)
+        for favorite in favorites {
+            StorageManager.saveObject(favorite)
+        }
     }
-    
-    
+
 }
