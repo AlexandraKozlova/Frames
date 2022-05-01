@@ -11,6 +11,7 @@ import RealmSwift
 class PictureInfoVC: UIViewController {
     
     var currentPicture: Picture!
+    var currentImage = [UIImage]()
     
     let picture: UIImageView = {
         let imageView = UIImageView()
@@ -26,6 +27,7 @@ class PictureInfoVC: UIViewController {
     let likeLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
     let likeCount = CountLabel()
     let addButton = AddButton()
+    let shareButton = ShareButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +41,7 @@ class PictureInfoVC: UIViewController {
         configureLikeLabel()
         configureLikeCount()
         configureAddButton()
+        configureShareButton()
         updateUIElement()
     }
     
@@ -52,6 +55,7 @@ class PictureInfoVC: UIViewController {
         guard let imageUrl = imageUrl, let url = URL(string: imageUrl)
         else { return }
         picture.sd_setImage(with: url)
+        currentImage.append(picture.image!)
         
         guard let location = currentPicture.user.location else {
             locationLabel.text = "No location"
@@ -119,7 +123,7 @@ class PictureInfoVC: UIViewController {
             infoView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 20),
             infoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            infoView.heightAnchor.constraint(equalToConstant: 150)
+            infoView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     
@@ -131,7 +135,7 @@ class PictureInfoVC: UIViewController {
         
         NSLayoutConstraint.activate([
             likeImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            likeImage.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 110),
+            likeImage.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -200),
             likeImage.heightAnchor.constraint(equalToConstant: 35),
             likeImage.widthAnchor.constraint(equalToConstant: 40)
         ])
@@ -161,30 +165,46 @@ class PictureInfoVC: UIViewController {
     
     private func configureAddButton() {
         infoView.addSubview(addButton)
-        addButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            addButton.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -20),
+            addButton.topAnchor.constraint(equalTo: likeCount.bottomAnchor, constant: 20),
             addButton.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 30),
             addButton.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -30),
             addButton.heightAnchor.constraint(equalToConstant: 35)
         ])
     }
     
+    private func configureShareButton() {
+        infoView.addSubview(shareButton)
+        shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            shareButton.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -15),
+            shareButton.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 30),
+            shareButton.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -30),
+            shareButton.heightAnchor.constraint(equalToConstant: 35)
+        ])
+    }
     
-    
-    @objc func buttonTapped() {
-        var favorites = [Favorite]()
-        let favorite = Favorite(user: currentPicture.user.name, urls: currentPicture.urls["regular"]!)
-        guard !favorites.contains(favorite)
-        else {
-            print("contains")
-            return
-        }
-        favorites.append(favorite)
-        for favorite in favorites {
+    @objc func addButtonTapped() {
+        let favorite = Favorite(user: currentPicture.user.name,
+                                urls: currentPicture.urls["regular"]!)
+        presentAlertOnMainThread(title: "Success!", message: "This picture in your favorite now.", buttonTitle: "Okay")
             StorageManager.saveObject(favorite)
         }
-    }
+    
+
+   @objc func shareButtonTapped() {
+       let shareController = UIActivityViewController(activityItems: currentImage, applicationActivities: nil)
+      
+       shareController.completionWithItemsHandler = { _, bool, _, _ in
+           if bool {
+               
+           }
+           
+       }
+       present(shareController, animated: true)
+}
 
 }

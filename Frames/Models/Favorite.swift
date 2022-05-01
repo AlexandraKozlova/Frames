@@ -11,7 +11,7 @@ import RealmSwift
 class Favorite: Object {
     @objc dynamic var user = ""
     @objc dynamic var urls =  ""
-    
+   
     convenience init(user: String, urls: String) {
         self.init()
         self.user = user

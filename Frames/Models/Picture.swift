@@ -8,7 +8,7 @@
 import Foundation
 
 struct Picture: Codable, Hashable {
-    
+    let id: String
     let likes: Int
     let width: Int
     let height: Int

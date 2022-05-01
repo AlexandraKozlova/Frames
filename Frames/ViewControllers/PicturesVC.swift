@@ -35,8 +35,10 @@ class PicturesVC: UIViewController {
             switch result {
             case .success(let pictures):
                 self.pictures = pictures
+                print(pictures)
                 self.updateData(with: pictures)
             case .failure(let error):
+                self.presentAlertOnMainThread(title: "Sonething went wrong!", message: error.rawValue, buttonTitle: "Okay")
                 print(error)
             }
         }
@@ -113,7 +115,8 @@ extension PicturesVC: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let text = searchBar.text {
-            NetworkManager.shared.getSearchResult(query: text) { [weak self] result in
+            let searchText = text.split(separator: " ").joined(separator: "%20")
+            NetworkManager.shared.getSearchResult(query: searchText) { [weak self] result in
                     DispatchQueue.main.async {
                     guard let self = self else { return }
                     switch result {

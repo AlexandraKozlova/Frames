@@ -1,13 +1,13 @@
 //
-//  AddButton.swift
+//  ShareButton.swift
 //  Frames
 //
-//  Created by Aleksandra on 16.04.2022.
+//  Created by Aleksandra on 29.04.2022.
 //
 
 import UIKit
 
-class AddButton: UIButton {
+class ShareButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,12 +21,9 @@ class AddButton: UIButton {
     private func configure() {
         layer.cornerRadius = 10
         titleLabel?.textColor = .white
-        backgroundColor = .systemPink
-        setTitle("Add to favorite", for: .normal)
+        backgroundColor = .systemGreen
+        setTitle("Share", for: .normal)
         titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         translatesAutoresizingMaskIntoConstraints = false
     }
 }
-
-
-
