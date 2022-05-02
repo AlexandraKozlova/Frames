@@ -20,7 +20,13 @@ extension UIViewController {
             alertVC.addAction(alertButton)
             self.present(alertVC, animated: true)
         }
-        
     }
+    
+    func showEmptyStateView(message: String, in view: UIView) {
+        let emptyStateView = EmptyView(message: message)
+        emptyStateView.frame = view.bounds
+        view.addSubview(emptyStateView)
+    }
+
 }
 

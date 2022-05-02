@@ -16,14 +16,18 @@ class FavoriteVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         favoritePictures = realm.objects(Favorite.self)
+        
         view.backgroundColor = .white
-        configureTableView()
         print(favoritePictures.count)
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        if favoritePictures.count == 0 {
+            self.showEmptyStateView(message: "No Favorites?\nAdd one on the search screen.", in: self.view)
+        } else {
+            configureTableView()
+        }
         tableView.reloadData()
-        print(favoritePictures.count)
     }
     
     func configureTableView() {

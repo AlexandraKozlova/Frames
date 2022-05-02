@@ -35,7 +35,6 @@ class PicturesVC: UIViewController {
             switch result {
             case .success(let pictures):
                 self.pictures = pictures
-                print(pictures)
                 self.updateData(with: pictures)
             case .failure(let error):
                 self.presentAlertOnMainThread(title: "Sonething went wrong!", message: error.rawValue, buttonTitle: "Okay")
@@ -105,11 +104,21 @@ extension PicturesVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let picture = pictures[indexPath.item]
-        let destinationVC = PictureInfoVC()
-        destinationVC.currentPicture = picture
-        navigationController?.pushViewController(destinationVC, animated: true)
+        
+            NetworkManager.shared.getPictureInfo(fromId: picture.id) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let currentPicture):
+                        let destinationVC = PictureInfoVC(currentPicture: currentPicture)
+                        self.navigationController?.pushViewController(destinationVC, animated: true)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
     }
-}
+
 
 extension PicturesVC: UISearchBarDelegate {
     

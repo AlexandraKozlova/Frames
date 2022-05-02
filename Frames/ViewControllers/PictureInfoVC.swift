@@ -10,8 +10,17 @@ import RealmSwift
 
 class PictureInfoVC: UIViewController {
     
-    var currentPicture: Picture!
+    var currentPicture: PictureInfo!
     var currentImage = [UIImage]()
+    
+    init(currentPicture: PictureInfo) {
+        super.init(nibName: nil, bundle: nil)
+        self.currentPicture = currentPicture
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     let picture: UIImageView = {
         let imageView = UIImageView()
@@ -23,9 +32,13 @@ class PictureInfoVC: UIViewController {
     let locationImage = UIImageView()
     let locationLabel = TitleLabel(fontName: "Avenir-Light", fontSize: 20, textAlignment: .left)
     let infoView = UIView()
-    let likeImage = UIImageView()
-    let likeLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
-    let likeCount = CountLabel()
+    let downloadImage = UIImageView()
+    let downloadsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
+    let downloadsCount = CountLabel()
+    let viewsImage = UIImageView()
+    let viewsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
+    let viewsCount = CountLabel()
+    
     let addButton = AddButton()
     let shareButton = ShareButton()
     
@@ -37,9 +50,12 @@ class PictureInfoVC: UIViewController {
         configureLocationImage()
         configureLocationLabel()
         configureInfoView()
-        configureLikeImage()
-        configureLikeLabel()
-        configureLikeCount()
+        configureDownloadImage()
+        configureDownloadsLabel()
+        configureDownloadsCount()
+        configureViewsImage()
+        configureViewsLabel()
+        configureViewsCount()
         configureAddButton()
         configureShareButton()
         updateUIElement()
@@ -52,10 +68,9 @@ class PictureInfoVC: UIViewController {
     
     private func updateUIElement() {
         let imageUrl = currentPicture.urls["regular"]
-        guard let imageUrl = imageUrl, let url = URL(string: imageUrl)
-        else { return }
+        guard let imageUrl = imageUrl, let url = URL(string: imageUrl) else { return }
         picture.sd_setImage(with: url)
-        currentImage.append(picture.image!)
+//        currentImage.append(picture.image!)
         
         guard let location = currentPicture.user.location else {
             locationLabel.text = "No location"
@@ -63,7 +78,8 @@ class PictureInfoVC: UIViewController {
         }
         locationLabel.text = location
         username.text = currentPicture.user.name
-        likeCount.text = String(currentPicture.likes)
+        downloadsCount.text = String(currentPicture.downloads)
+        viewsCount.text = String(currentPicture.views)
     }
     
     private func configurePicture() {
@@ -127,39 +143,78 @@ class PictureInfoVC: UIViewController {
         ])
     }
     
-    private func configureLikeImage() {
-        infoView.addSubview(likeImage)
-        likeImage.translatesAutoresizingMaskIntoConstraints = false
-        likeImage.image = UIImage(systemName: "heart")
-        likeImage.tintColor = UIColor.systemPink
+    private func configureDownloadImage() {
+        infoView.addSubview(downloadImage)
+        downloadImage.translatesAutoresizingMaskIntoConstraints = false
+        downloadImage.image = UIImage(systemName: "square.and.arrow.down")
+        downloadImage.tintColor = UIColor.systemPink
         
         NSLayoutConstraint.activate([
-            likeImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            likeImage.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -200),
-            likeImage.heightAnchor.constraint(equalToConstant: 35),
-            likeImage.widthAnchor.constraint(equalToConstant: 40)
+            downloadImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            downloadImage.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 30),
+            downloadImage.heightAnchor.constraint(equalToConstant: 30),
+            downloadImage.widthAnchor.constraint(equalToConstant: 35)
         ])
     }
     
-    private func configureLikeLabel() {
-        infoView.addSubview(likeLabel)
-        likeLabel.text = "Likes"
+    private func configureDownloadsLabel() {
+        infoView.addSubview(downloadsLabel)
+        downloadsLabel.text = "Downloads"
+
         
         NSLayoutConstraint.activate([
-            likeLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            likeLabel.centerXAnchor.constraint(equalTo: infoView.centerXAnchor),
-            likeLabel.heightAnchor.constraint(equalToConstant: 35),
-            likeLabel.widthAnchor.constraint(equalToConstant: 70)
+            downloadsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            downloadsLabel.leadingAnchor.constraint(equalTo: downloadImage.trailingAnchor, constant: 6),
+            downloadsLabel.heightAnchor.constraint(equalToConstant: 30),
+            downloadsLabel.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
     
-    private func configureLikeCount() {
-        infoView.addSubview(likeCount)
+    private func configureDownloadsCount() {
+        infoView.addSubview(downloadsCount)
+
+        NSLayoutConstraint.activate([
+            downloadsCount.topAnchor.constraint(equalTo: downloadsLabel.bottomAnchor, constant: 10),
+            downloadsCount.leadingAnchor.constraint(equalTo: downloadImage.leadingAnchor),
+            downloadsCount.trailingAnchor.constraint(equalTo: downloadsLabel.trailingAnchor),
+            downloadsCount.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+    
+    private func configureViewsImage() {
+        infoView.addSubview(viewsImage)
+        viewsImage.translatesAutoresizingMaskIntoConstraints = false
+        viewsImage.image = UIImage(systemName: "eye")
+        viewsImage.tintColor = UIColor.systemPink
         
         NSLayoutConstraint.activate([
-            likeCount.topAnchor.constraint(equalTo: likeLabel.bottomAnchor, constant: 10),
-            likeCount.centerXAnchor.constraint(equalTo: infoView.centerXAnchor),
-            likeCount.heightAnchor.constraint(equalToConstant: 20)
+            viewsImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            viewsImage.leadingAnchor.constraint(equalTo: downloadsLabel.trailingAnchor, constant: 45),
+            viewsImage.heightAnchor.constraint(equalToConstant: 30),
+            viewsImage.widthAnchor.constraint(equalToConstant: 40)
+        ])
+    }
+    
+    private func configureViewsLabel() {
+        infoView.addSubview(viewsLabel)
+        viewsLabel.text = "Views"
+        
+        NSLayoutConstraint.activate([
+            viewsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
+            viewsLabel.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -30),
+            viewsLabel.heightAnchor.constraint(equalToConstant: 30),
+            viewsLabel.widthAnchor.constraint(equalToConstant: 75)
+        ])
+    }
+    
+    private func configureViewsCount() {
+        infoView.addSubview(viewsCount)
+
+        NSLayoutConstraint.activate([
+            viewsCount.topAnchor.constraint(equalTo: viewsLabel.bottomAnchor, constant: 10),
+            viewsCount.leadingAnchor.constraint(equalTo: viewsImage.leadingAnchor),
+            viewsCount.trailingAnchor.constraint(equalTo: viewsLabel.trailingAnchor),
+            viewsCount.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -168,7 +223,7 @@ class PictureInfoVC: UIViewController {
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            addButton.topAnchor.constraint(equalTo: likeCount.bottomAnchor, constant: 20),
+            addButton.topAnchor.constraint(equalTo: downloadsCount.bottomAnchor, constant: 20),
             addButton.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: 30),
             addButton.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -30),
             addButton.heightAnchor.constraint(equalToConstant: 35)
@@ -198,11 +253,11 @@ class PictureInfoVC: UIViewController {
    @objc func shareButtonTapped() {
        let shareController = UIActivityViewController(activityItems: currentImage, applicationActivities: nil)
       
-       shareController.completionWithItemsHandler = { _, bool, _, _ in
+       shareController.completionWithItemsHandler = { [weak self] _, bool, _, _ in
+           guard let self = self else { return }
            if bool {
-               
+               self.presentAlertOnMainThread(title: "Success!", message: "We are done here.", buttonTitle: "Okay")
            }
-           
        }
        present(shareController, animated: true)
 }

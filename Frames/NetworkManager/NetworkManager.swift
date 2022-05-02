@@ -66,4 +66,33 @@ class NetworkManager {
         }
         task.resume()
     }
+    
+    func getPictureInfo(fromId id: String, completion: @escaping (Result<PictureInfo, ErrorMessage>) -> Void) {
+        let urlOFPictureInfo = "https://api.unsplash.com/photos/\(id)?client_id=\(accessKey)"
+        
+        guard let url = URL(string: urlOFPictureInfo)
+        else {
+            completion(.failure(.wrongName))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+
+            guard let data = data, error == nil
+            else {
+                completion(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let jsonResult = try JSONDecoder().decode(PictureInfo.self, from: data)
+                completion(.success(jsonResult))
+                print(jsonResult)
+               
+            } catch {
+                completion(.failure(.invalidData))
+            }
+        }
+        task.resume()
+    }
 }
