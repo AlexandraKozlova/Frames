@@ -11,14 +11,14 @@ import SDWebImage
 class PictureCell: UICollectionViewCell {
     
     static let reuseID = "PictureCell"
+    
     private let image: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .systemGray
+        imageView.backgroundColor = .systemGray3
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    
     var unsplashImages: Picture! {
         didSet {
             let imageUrl = unsplashImages.urls["regular"]

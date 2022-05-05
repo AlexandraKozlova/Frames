@@ -22,29 +22,33 @@ class PictureInfoVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    let scrollView = UIScrollView()
+    let contentView = UIView()
+    
     let picture: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
     let username = TitleLabel(fontName: "Avenir-Heavy", fontSize: 25, textAlignment: .left)
     let locationImage = UIImageView()
     let locationLabel = TitleLabel(fontName: "Avenir-Light", fontSize: 20, textAlignment: .left)
     let infoView = UIView()
     let downloadImage = UIImageView()
-    let downloadsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
+    let downloadsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .left)
     let downloadsCount = CountLabel()
     let viewsImage = UIImageView()
-    let viewsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .center)
+    let viewsLabel = TitleLabel(fontName: "Avenir-Heavy", fontSize: 20, textAlignment: .left)
     let viewsCount = CountLabel()
-    
     let addButton = AddButton()
     let shareButton = ShareButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
+        configureScrollView()
         configurePicture()
         configureLabel()
         configureLocationImage()
@@ -66,13 +70,24 @@ class PictureInfoVC: UIViewController {
         navigationController?.navigationBar.tintColor = UIColor.systemPink
     }
     
+    private func configureScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        scrollView.pinToEdges(of: view)
+        contentView.pinToEdges(of: scrollView)
+        
+        NSLayoutConstraint.activate([
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(equalToConstant: 700)
+        ])
+    }
+    
     private func updateUIElement() {
         let imageUrl = currentPicture.urls["regular"]
         guard let imageUrl = imageUrl, let url = URL(string: imageUrl) else { return }
         picture.sd_setImage(with: url)
-//        currentImage.append(picture.image!)
-        
-        guard let location = currentPicture.user.location else {
+        guard let location = currentPicture.user.location
+        else {
             locationLabel.text = "No location"
             return
         }
@@ -83,62 +98,62 @@ class PictureInfoVC: UIViewController {
     }
     
     private func configurePicture() {
-        view.addSubview(picture)
+        contentView.addSubview(picture)
         
         NSLayoutConstraint.activate([
-            picture.topAnchor.constraint(equalTo: view.topAnchor, constant: 85),
-            picture.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            picture.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            picture.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            picture.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            picture.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             picture.heightAnchor.constraint(equalToConstant: 400)
         ])
     }
     
     private func configureLabel() {
-        view.addSubview(username)
+        contentView.addSubview(username)
         
         NSLayoutConstraint.activate([
             username.topAnchor.constraint(equalTo: picture.bottomAnchor, constant: 10),
-            username.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            username.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            username.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            username.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             username.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     
     private func configureLocationImage() {
-        view.addSubview(locationImage)
+        contentView.addSubview(locationImage)
         locationImage.translatesAutoresizingMaskIntoConstraints = false
         locationImage.image = UIImage(systemName: "mappin.and.ellipse")
         locationImage.tintColor = UIColor.systemPink
         
         NSLayoutConstraint.activate([
             locationImage.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 10),
-            locationImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            locationImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             locationImage.heightAnchor.constraint(equalToConstant: 25),
             locationImage.widthAnchor.constraint(equalToConstant: 20)
         ])
     }
     
     private func configureLocationLabel() {
-        view.addSubview(locationLabel)
+        contentView.addSubview(locationLabel)
         
         NSLayoutConstraint.activate([
             locationLabel.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 10),
             locationLabel.leadingAnchor.constraint(equalTo: locationImage.trailingAnchor, constant: 3),
-            locationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            locationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             locationLabel.heightAnchor.constraint(equalToConstant: 25)
         ])
     }
     
     private func configureInfoView() {
-        view.addSubview(infoView)
+        contentView.addSubview(infoView)
         infoView.translatesAutoresizingMaskIntoConstraints = false
         infoView.backgroundColor = .systemGray5
         infoView.layer.cornerRadius = 10
         
         NSLayoutConstraint.activate([
             infoView.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 20),
-            infoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            infoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            infoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             infoView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
@@ -161,10 +176,9 @@ class PictureInfoVC: UIViewController {
         infoView.addSubview(downloadsLabel)
         downloadsLabel.text = "Downloads"
 
-        
         NSLayoutConstraint.activate([
             downloadsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            downloadsLabel.leadingAnchor.constraint(equalTo: downloadImage.trailingAnchor, constant: 6),
+            downloadsLabel.leadingAnchor.constraint(equalTo: downloadImage.trailingAnchor, constant: 3),
             downloadsLabel.heightAnchor.constraint(equalToConstant: 30),
             downloadsLabel.widthAnchor.constraint(equalToConstant: 100)
         ])
@@ -189,7 +203,7 @@ class PictureInfoVC: UIViewController {
         
         NSLayoutConstraint.activate([
             viewsImage.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
-            viewsImage.leadingAnchor.constraint(equalTo: downloadsLabel.trailingAnchor, constant: 45),
+            viewsImage.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -100),
             viewsImage.heightAnchor.constraint(equalToConstant: 30),
             viewsImage.widthAnchor.constraint(equalToConstant: 40)
         ])
@@ -203,7 +217,7 @@ class PictureInfoVC: UIViewController {
             viewsLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 15),
             viewsLabel.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -30),
             viewsLabel.heightAnchor.constraint(equalToConstant: 30),
-            viewsLabel.widthAnchor.constraint(equalToConstant: 75)
+            viewsLabel.widthAnchor.constraint(equalToConstant: 70)
         ])
     }
     
@@ -244,11 +258,11 @@ class PictureInfoVC: UIViewController {
     
     @objc func addButtonTapped() {
         let favorite = Favorite(user: currentPicture.user.name,
-                                urls: currentPicture.urls["regular"]!)
+                                urls: currentPicture.urls["regular"]!,
+                                id: currentPicture.id)
         presentAlertOnMainThread(title: "Success!", message: "This picture in your favorite now.", buttonTitle: "Okay")
             StorageManager.saveObject(favorite)
         }
-    
 
    @objc func shareButtonTapped() {
        let shareController = UIActivityViewController(activityItems: currentImage, applicationActivities: nil)
@@ -260,6 +274,5 @@ class PictureInfoVC: UIViewController {
            }
        }
        present(shareController, animated: true)
-}
-
+   }
 }

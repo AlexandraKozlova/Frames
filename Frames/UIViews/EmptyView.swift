@@ -49,5 +49,4 @@ class EmptyView: UIView {
             logoImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -100)
         ])
     }
-
 }

@@ -10,6 +10,7 @@ import UIKit
 class FavoriteCell: UITableViewCell {
 
     static let reuseID = "FavoriteCell"
+    
     let pictureView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,22 +29,20 @@ class FavoriteCell: UITableViewCell {
     }
     
     private func configure() {
-       
         addSubview(pictureView)
         addSubview(usernameLabel)
         
         accessoryType = .disclosureIndicator
-        let padding: CGFloat = 12
-        
+
         NSLayoutConstraint.activate([
             pictureView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            pictureView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+            pictureView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
             pictureView.heightAnchor.constraint(equalToConstant: 90),
             pictureView.widthAnchor.constraint(equalToConstant: 90),
             
             usernameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             usernameLabel.leadingAnchor.constraint(equalTo: pictureView.trailingAnchor, constant: 24),
-            usernameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            usernameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
             usernameLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }

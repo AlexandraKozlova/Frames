@@ -12,9 +12,9 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    let urlOFRandomPhotos = "https://api.unsplash.com/photos/random/?count=30&client_id=\(accessKey)"
-    
     func getPictures(completion: @escaping (Result<[Picture], ErrorMessage>) -> Void) {
+        let urlOFRandomPhotos = "https://api.unsplash.com/photos/random/?count=30&client_id=\(accessKey)"
+        
         guard let url = URL(string: urlOFRandomPhotos)
         else {
             completion(.failure(.invalidResponse))
@@ -49,17 +49,15 @@ class NetworkManager {
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
-
             guard let data = data, error == nil
             else {
                 completion(.failure(.invalidData))
                 return
             }
-            
             do {
                 let jsonResult = try JSONDecoder().decode(SearchResult.self, from: data)
                 completion(.success(jsonResult.results))
-               
+                
             } catch {
                 completion(.failure(.invalidData))
             }
@@ -77,18 +75,16 @@ class NetworkManager {
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
-
             guard let data = data, error == nil
             else {
                 completion(.failure(.invalidData))
                 return
             }
-            
             do {
                 let jsonResult = try JSONDecoder().decode(PictureInfo.self, from: data)
                 completion(.success(jsonResult))
                 print(jsonResult)
-               
+                
             } catch {
                 completion(.failure(.invalidData))
             }

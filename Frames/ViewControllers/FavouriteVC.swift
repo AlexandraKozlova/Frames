@@ -16,9 +16,7 @@ class FavoriteVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         favoritePictures = realm.objects(Favorite.self)
-        
         view.backgroundColor = .white
-        print(favoritePictures.count)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,9 +56,25 @@ extension FavoriteVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let favorite = favoritePictures[indexPath.row]
+        NetworkManager.shared.getPictureInfo(fromId: favorite.id) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let currentPicture):
+                    let destinationVC = PictureInfoVC(currentPicture: currentPicture)
+                    self.navigationController?.pushViewController(destinationVC, animated: true)
+                case .failure(let error):
+                    self.presentAlertOnMainThread(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Okay")
+                }
+            }
+        }
+    }
+
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-
         let favorite = favoritePictures[indexPath.row]
         StorageManager.deleteObject(favorite)
         tableView.deleteRows(at: [indexPath], with: .left)

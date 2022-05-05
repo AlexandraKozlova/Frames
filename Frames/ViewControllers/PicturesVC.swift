@@ -17,7 +17,6 @@ class PicturesVC: UIViewController {
     var pictures = [Picture]()
     private let itemsPerRow: CGFloat = 2
     private let sectionInserts = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    var page = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +26,7 @@ class PicturesVC: UIViewController {
         configureCollectionView()
         configureDataSource()
         collectionView.delegate = self
-}
+    }
     
     func getPictures() {
         NetworkManager.shared.getPictures { [weak self] result  in
@@ -38,7 +37,6 @@ class PicturesVC: UIViewController {
                 self.updateData(with: pictures)
             case .failure(let error):
                 self.presentAlertOnMainThread(title: "Sonething went wrong!", message: error.rawValue, buttonTitle: "Okay")
-                print(error)
             }
         }
     }
@@ -88,7 +86,6 @@ extension PicturesVC: UICollectionViewDelegateFlowLayout {
         let widthPerItem = availableWidth / itemsPerRow
         let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
         return CGSize(width: widthPerItem, height: height)
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -104,15 +101,17 @@ extension PicturesVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let picture = pictures[indexPath.item]
-        
-            NetworkManager.shared.getPictureInfo(fromId: picture.id) { result in
+        showLoadingView()
+            NetworkManager.shared.getPictureInfo(fromId: picture.id) { [weak self] result in
+                guard let self = self else { return }
+                self.dissmisLoadingView()
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let currentPicture):
                         let destinationVC = PictureInfoVC(currentPicture: currentPicture)
                         self.navigationController?.pushViewController(destinationVC, animated: true)
                     case .failure(let error):
-                        print(error)
+                        self.presentAlertOnMainThread(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Okay")
                     }
                 }
             }
@@ -123,19 +122,20 @@ extension PicturesVC: UICollectionViewDelegate {
 extension PicturesVC: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        showLoadingView()
         if let text = searchBar.text {
             let searchText = text.split(separator: " ").joined(separator: "%20")
             NetworkManager.shared.getSearchResult(query: searchText) { [weak self] result in
                     DispatchQueue.main.async {
                     guard let self = self else { return }
+                    self.dissmisLoadingView()
                     switch result {
                     case .success(let images):
                         self.pictures = images
                         self.updateData(with: images)
                         self.collectionView.reloadData()
-                        print(images)
                     case .failure(let error):
-                        print(error)
+                        self.presentAlertOnMainThread(title: "Something went wrong!", message: error.rawValue, buttonTitle: "Okay")
                     }
                 }
             }

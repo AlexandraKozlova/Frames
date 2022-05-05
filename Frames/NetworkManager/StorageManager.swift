@@ -13,15 +13,11 @@ let realm = try! Realm()
 class StorageManager {
 
     static func saveObject (_ favorite: Favorite) {
-        try! realm.write {
-            realm.add(favorite)
-        }
+        try! realm.write { realm.add(favorite) }
     }
 
     static func deleteObject (_ favorite: Favorite) {
-        try! realm.write {
-            realm.delete(favorite)
-        }
+        try! realm.write { realm.delete(favorite) }
     }
 }
 

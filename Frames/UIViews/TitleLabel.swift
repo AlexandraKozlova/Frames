@@ -18,11 +18,10 @@ class TitleLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(fontName: String, fontSize: CGFloat, textAlignment: NSTextAlignment) {
-        super.init(frame: .zero)
+   convenience init(fontName: String, fontSize: CGFloat, textAlignment: NSTextAlignment) {
+        self.init(frame: .zero)
         font = UIFont(name: fontName, size: fontSize)
         self.textAlignment = textAlignment
-        configure()
     }
     
     private func configure() {
